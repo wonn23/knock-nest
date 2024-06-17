@@ -1,0 +1,5 @@
+# Nest.js
+node_modules/
+dist/
+.env
+.env.*
