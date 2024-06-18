@@ -23,7 +23,7 @@ export class User extends CommonEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'citext', unique: true, length: 50 })
+  @Column({ type: 'citext', unique: true })
   email: string;
 
   @Column()

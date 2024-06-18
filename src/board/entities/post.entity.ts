@@ -15,7 +15,7 @@ export class Post extends CommonEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'enum', enum: MeetingPurpose, default: 'OTHER' })
+  @Column({ type: 'enum', enum: MeetingPurpose, default: MeetingPurpose.FOOD })
   type: MeetingPurpose;
 
   @Column({ length: 50 })
