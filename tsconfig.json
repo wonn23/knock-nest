@@ -19,12 +19,13 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@src/*": ["src/app/*"],
-      "@config/*": ["src/config/*"],
-      "@utils/*": ["src/utils/*"],
       "@auth/*": ["src/auth/*"],
+      "@board/*": ["src/board/*"],
+      "@chat/*": ["src/chat/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
       "@user/*": ["src/user/*"],
-      "@post/*": ["src/post/*"],
-      "@comment/*": ["src/comment/*"]
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

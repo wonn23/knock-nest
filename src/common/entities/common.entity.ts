@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
@@ -5,10 +6,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-export abstract class CommonEntity<T> {
-  @PrimaryGeneratedColumn()
-  id: T;
-
+export abstract class CommonEntity {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
@@ -16,5 +14,6 @@ export abstract class CommonEntity<T> {
   updatedAt: Date;
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
-  deletedAt?: Date;
+  @Exclude()
+  deletedAt?: Date | null;
 }
