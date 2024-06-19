@@ -1,5 +1,6 @@
 import MBTI from '@user/enum/mbti.enum';
 import Region from '@user/enum/region.enum';
+import UserRole from '@user/enum/role.enum';
 import { Exclude } from 'class-transformer';
 import { CommonEntity } from '@common/entities/common.entity';
 import {
@@ -22,6 +23,9 @@ const bcryptRegex = /^\$(?:2a|2x|2y|2b)\$\d+\$/u;
 export class User extends CommonEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.User })
+  role: UserRole;
 
   @Column('citext', { unique: true })
   email: string;
@@ -59,6 +63,9 @@ export class User extends CommonEntity {
 
   @Column({ length: 100, nullable: true })
   description: string;
+
+  @Column({ nullable: true })
+  providerId: string;
 
   @OneToMany(() => Post, (post) => post.user, { onDelete: 'CASCADE' })
   posts: Post[];
