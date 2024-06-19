@@ -9,6 +9,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import { LoggerMiddleware } from '@common/middlewares/logger.middleware';
+import { RedisModule } from './redis/redis.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -50,6 +51,7 @@ import { LoggerMiddleware } from '@common/middlewares/logger.middleware';
       }),
       inject: [ConfigService],
     }),
+    RedisModule,
   ],
   controllers: [],
   providers: [],
