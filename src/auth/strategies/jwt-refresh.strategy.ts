@@ -3,7 +3,6 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
-import { Payload } from './jwt.payload';
 
 // refresh token 검증 전략
 @Injectable()
@@ -17,13 +16,13 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+      secretOrKey: configService.get<string>('RT_JWT_SECRET'),
       passReqToCallback: true, // validate에서 client request 접근할 수 있도록 설정
       ignoreExpiration: false,
     });
   }
 
-  async validate(req: Request, payload: Payload) {
+  async validate(req: Request, payload: any) {
     try {
       const refreshToken = req.headers['authorization'].split(' ')[1];
       const isTokenValid = await this.authService.isRefreshTokenValid(

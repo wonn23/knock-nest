@@ -1,9 +1,13 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from '@src/app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { HttpExceptionFilter } from '@common/exceptions/http-exception.filter';
 import cookieParser from 'cookie-parser';
 
@@ -19,6 +23,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.use(cookieParser(configService.getOrThrow('SECRET')));
 
   const swaggerConfig = new DocumentBuilder()
@@ -52,5 +57,6 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   const port = configService.get('PORT');
   await app.listen(port);
+  Logger.log(`Server running on http://localhost:${port}`, 'Bootstrap');
 }
 bootstrap();

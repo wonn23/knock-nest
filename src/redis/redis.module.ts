@@ -1,6 +1,5 @@
 import { Global, Module, OnApplicationShutdown } from '@nestjs/common';
 import { RedisService } from './redis.service';
-import { RedisController } from './redis.controller';
 import { Redis } from 'ioredis';
 import { ModuleRef } from '@nestjs/core';
 import { IORedisKey } from './redis.constants';

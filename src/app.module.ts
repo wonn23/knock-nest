@@ -15,16 +15,29 @@ import { RedisModule } from './redis/redis.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
+        // API
         PORT: Joi.number().required(),
         SECRET: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.number().required(),
+        RT_JWT_SECRET: Joi.string().required(),
+        RT_JWT_EXPIRATION_TIME: Joi.number().required(),
         NODE_ENV: Joi.string().valid('development', 'production').required(),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.number().required(),
+        // PostgreSQL
         DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+        DB_HOST: Joi.string().required(),
+        // MongoDB
+        MONGO_DB: Joi.string().required(),
         MONGO_URI: Joi.string().required(),
+        // Redis
+        REDIS_URL: Joi.string().required(),
+        // Google
+        GOOGLE_CLIENT_ID: Joi.string().required(),
+        GOOGLE_CLIENT_SECRET: Joi.string().required(),
+        GOOGLE_CALLBACK_URL: Joi.string().required(),
       }),
     }),
     AuthModule,

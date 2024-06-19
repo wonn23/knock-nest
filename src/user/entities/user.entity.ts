@@ -2,16 +2,18 @@ import MBTI from '@user/enum/mbti.enum';
 import Region from '@user/enum/region.enum';
 import UserRole from '@user/enum/role.enum';
 import { Exclude } from 'class-transformer';
-import { CommonEntity } from '@common/entities/common.entity';
 import {
   AfterLoad,
   BeforeInsert,
   BeforeUpdate,
   Column,
+  CreateDateColumn,
   DeepPartial,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Post } from 'src/board/entities/post.entity';
@@ -20,14 +22,14 @@ import { Comment } from '@board/entities/comment.entity';
 const bcryptRegex = /^\$(?:2a|2x|2y|2b)\$\d+\$/u;
 
 @Entity('users')
-export class User extends CommonEntity {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.User })
   role: UserRole;
 
-  @Column('citext', { unique: true })
+  @Column('citext', { unique: true }) // citext 대소문자를 구분하지 않는다.
   email: string;
 
   @Column()
@@ -36,8 +38,8 @@ export class User extends CommonEntity {
   @Column('citext')
   nickname: string;
 
-  @Column()
   @Exclude()
+  @Column()
   password: string;
 
   @Column()
@@ -66,6 +68,16 @@ export class User extends CommonEntity {
 
   @Column({ nullable: true })
   providerId: string;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
+  deletedAt?: Date | null;
 
   @OneToMany(() => Post, (post) => post.user, { onDelete: 'CASCADE' })
   posts: Post[];

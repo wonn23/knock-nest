@@ -1,17 +1,20 @@
-import { CommonEntity } from '@common/entities/common.entity';
 import { User } from '@user/entities/user.entity';
 import MeetingPurpose from '@board/enum/type.enum';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Comment } from '@board/entities/comment.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('posts')
-export class Post extends CommonEntity {
+export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -44,6 +47,16 @@ export class Post extends CommonEntity {
 
   @Column({ type: 'int' })
   recruitedWoman: number;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
+  deletedAt?: Date | null;
 
   @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' })
   user: User;

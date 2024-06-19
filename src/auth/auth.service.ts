@@ -5,6 +5,8 @@ import { User } from '@user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/redis/redis.service';
+import { RegisterDto } from '@auth/dto/register.dto';
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +16,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
   ) {}
+
+  async register(registerDto: RegisterDto): Promise<User> {
+    return await this.userService.register(registerDto);
+  }
 
   async logIn(
     loginDto: LoginDto,
@@ -39,7 +45,7 @@ export class AuthService {
 
   // access token 생성
   private async generateAccessToken(user: User): Promise<string> {
-    const payload = { sub: user.id, username: user.name, role: user.role };
+    const payload = { sub: user.id, email: user.email, role: user.role };
 
     const token = this.jwtService.sign(
       { payload },
@@ -54,7 +60,7 @@ export class AuthService {
 
   // refresh token 생성
   private async generateRefreshToken(user: User): Promise<string> {
-    const payload = { sub: user.id, username: user.name, role: user.role };
+    const payload = { sub: user.id, email: user.email, role: user.role };
 
     const token = this.jwtService.sign(
       { payload },
