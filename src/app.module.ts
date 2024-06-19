@@ -1,13 +1,14 @@
-import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { ChatModule } from './chat/chat.module';
-import { UserModule } from './user/user.module';
-import { BoardModule } from './board/board.module';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { AuthModule } from '@auth/auth.module';
+import { ChatModule } from '@chat/chat.module';
+import { UserModule } from '@user/user.module';
+import { BoardModule } from '@board/board.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as Joi from 'joi';
+import Joi from 'joi';
+import { LoggerMiddleware } from '@common/middlewares/logger.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,6 +16,7 @@ import * as Joi from 'joi';
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         SECRET: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
         NODE_ENV: Joi.string().valid('development', 'production').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
@@ -52,4 +54,8 @@ import * as Joi from 'joi';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

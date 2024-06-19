@@ -23,13 +23,13 @@ export class User extends CommonEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'citext', unique: true })
+  @Column('citext', { unique: true })
   email: string;
 
   @Column()
   name: string;
 
-  @Column({ type: 'citext' })
+  @Column('citext')
   nickname: string;
 
   @Column()

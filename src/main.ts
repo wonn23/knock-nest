@@ -2,22 +2,24 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@src/app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import * as cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from '@common/exceptions/http-exception.filter';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    abortOnError: true,
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  const configService = app.get(ConfigService);
 
   app.enableCors({
     origin: true,
     credentials: true,
   });
 
-  app.use(cookieParser());
+  app.setGlobalPrefix('api');
+
+  app.use(cookieParser(configService.getOrThrow('SECRET')));
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('saju')
@@ -48,7 +50,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
-  const configService = app.get(ConfigService);
   const port = configService.get('PORT');
   await app.listen(port);
 }

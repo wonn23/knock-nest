@@ -18,7 +18,7 @@ export class Board extends CommonEntity {
 
   @ManyToMany(() => Post)
   @JoinTable({
-    name: 'BOARD_POST',
+    name: 'board_posts',
     joinColumn: { name: 'board_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'post_id', referencedColumnName: 'id' },
   })
