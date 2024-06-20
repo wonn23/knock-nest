@@ -1,19 +1,23 @@
-import { IsDate, IsEnum, IsString } from 'class-validator';
-import MeetingPurpose from '@board/enum/type.enum';
+import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePostDto {
-  @IsEnum(MeetingPurpose)
-  type: MeetingPurpose;
+  @IsOptional()
+  @IsString()
+  type?: string;
 
+  @IsNotEmpty()
   @IsString()
   title: string;
 
+  @IsOptional()
   @IsString()
-  place: string;
+  place?: string;
 
+  @IsOptional()
   @IsDate()
-  meetingTime: Date;
+  meetingTime?: Date;
 
+  @IsNotEmpty()
   @IsString()
   content: string;
 }

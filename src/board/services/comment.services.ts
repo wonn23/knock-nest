@@ -4,25 +4,50 @@ import { Repository } from 'typeorm';
 import { Comment } from '@board/entities/comment.entity';
 import { CreateCommentDto } from '@board/dto/create-comment.dto';
 import { UpdateCommentDto } from '@board/dto/update-comment.dto';
+import { User } from '@user/entities/user.entity';
+import { PostService } from '@board/services/post.services';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
+    private postService: PostService,
   ) {}
 
-  async createComment(createCommentDto: CreateCommentDto): Promise<Comment> {
-    const comment = this.commentRepository.create(createCommentDto);
+  async createComment(
+    boardId: number,
+    postId: number,
+    user: User,
+    createCommentDto: CreateCommentDto,
+  ): Promise<Comment> {
+    await this.postService.getPost(boardId, postId);
+    const comment = this.commentRepository.create({
+      ...createCommentDto,
+      author: { id: user.id },
+      post: { id: postId },
+    });
     return await this.commentRepository.save(comment);
   }
 
-  async getAllComments(): Promise<Comment[]> {
-    return await this.commentRepository.find();
+  async getAllComments(boardId: number, postId: number): Promise<Comment[]> {
+    await this.postService.getPost(boardId, postId);
+    return await this.commentRepository.find({
+      where: { post: { id: postId } },
+      relations: ['post'],
+    });
   }
 
-  async getComment(id: number): Promise<Comment> {
-    const comment = await this.commentRepository.findOneBy({ id });
+  async getComment(
+    boardId: number,
+    postId: number,
+    commentId: number,
+  ): Promise<Comment> {
+    await this.postService.getPost(boardId, postId);
+    const comment = await this.commentRepository.findOne({
+      where: { post: { id: postId }, id: commentId },
+      relations: ['post'],
+    });
     if (!comment) {
       throw new NotFoundException('댓글을 찾을 수 없습니다.');
     }
@@ -30,22 +55,22 @@ export class CommentService {
   }
 
   async updateComment(
-    id: number,
+    boardId: number,
+    postId: number,
+    commentId: number,
     updateCommentDto: UpdateCommentDto,
   ): Promise<Comment> {
-    const comment = await this.commentRepository.findOneBy({ id });
-    if (!comment) {
-      throw new NotFoundException('댓글을 찾을 수 없습니다.');
-    }
-    this.commentRepository.update(id, updateCommentDto);
+    const comment = await this.getComment(boardId, postId, commentId);
+    comment.content = updateCommentDto.content;
     return await this.commentRepository.save(comment);
   }
 
-  async deleteComment(id: number): Promise<void> {
-    const comment = await this.commentRepository.findOneBy({ id });
-    if (!comment) {
-      throw new NotFoundException('댓글을 찾을 수 없습니다.');
-    }
-    await this.commentRepository.softDelete(comment);
+  async deleteComment(
+    boardId: number,
+    postId: number,
+    commentId: number,
+  ): Promise<void> {
+    const comment = await this.getComment(boardId, postId, commentId);
+    await this.commentRepository.softDelete(comment.id);
   }
 }

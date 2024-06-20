@@ -15,6 +15,10 @@ export class JwtAccessTokenStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: any) {
-    return payload.userId;
+    try {
+      return payload;
+    } catch (error) {
+      throw error;
+    }
   }
 }

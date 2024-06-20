@@ -4,11 +4,10 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('boards')
@@ -19,12 +18,7 @@ export class Board {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => Post)
-  @JoinTable({
-    name: 'board_post',
-    joinColumn: { name: 'board_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'post_id', referencedColumnName: 'id' },
-  })
+  @OneToMany(() => Post, (post) => post.board)
   posts: Post[];
 
   @CreateDateColumn({ type: 'timestamptz' })

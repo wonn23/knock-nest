@@ -44,30 +44,24 @@ export class AuthService {
 
   // access token 생성
   private async generateAccessToken(user: User): Promise<string> {
-    const payload = { sub: user.id, email: user.email, role: user.role };
+    const payload = { id: user.id, email: user.email, role: user.role };
 
-    const token = this.jwtService.sign(
-      { payload },
-      {
-        secret: this.configService.get('JWT_SECRET'),
-        expiresIn: this.configService.get('JWT_EXPIRATION_TIME'),
-      },
-    );
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: this.configService.get('JWT_EXPIRATION_TIME'),
+    });
 
     return token;
   }
 
   // refresh token 생성
   private async generateRefreshToken(user: User): Promise<string> {
-    const payload = { sub: user.id, email: user.email, role: user.role };
+    const payload = { id: user.id, email: user.email, role: user.role };
 
-    const token = this.jwtService.sign(
-      { payload },
-      {
-        secret: this.configService.get('RT_JWT_SECRET'),
-        expiresIn: this.configService.get('RT_JWT_EXPIRATION_TIME'),
-      },
-    );
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('RT_JWT_SECRET'),
+      expiresIn: this.configService.get('RT_JWT_EXPIRATION_TIME'),
+    });
 
     return token;
   }

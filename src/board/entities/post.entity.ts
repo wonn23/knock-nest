@@ -13,44 +13,45 @@ import {
 import { Comment } from '@board/entities/comment.entity';
 import { Exclude } from 'class-transformer';
 import { File } from '@file/entities/file.entity';
+import { Board } from '@board/entities/board.entity';
 
 @Entity('posts')
 export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'enum', enum: MeetingPurpose, default: MeetingPurpose.FOOD })
-  type: MeetingPurpose;
-
   @Column({ length: 50 })
   title: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   place: string;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamptz', nullable: true })
   meetingTime: Date;
 
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ default: false })
+  @Column({ default: false, nullable: true })
   isCompleted: boolean;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   totalMan: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   totalWoman: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   recruitedMan: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   recruitedWoman: number;
 
   @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' })
   user: User;
+
+  @ManyToOne(() => Board, (board) => board.posts, { onDelete: 'CASCADE' })
+  board: Board;
 
   @OneToMany(() => Comment, (comment) => comment.post, { onDelete: 'CASCADE' })
   comments: Comment[];

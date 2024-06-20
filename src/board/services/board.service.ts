@@ -22,23 +22,20 @@ export class BoardService {
   }
 
   async findOne(id: number): Promise<Board> {
-    return await this.boardRepository.findOneBy({ id });
+    const board = await this.boardRepository.findOneBy({ id });
+    if (!board) {
+      throw new NotFoundException('게시판을 찾을 수 없습니다.');
+    }
+    return board;
   }
 
   async update(id: number, updateBoardData: UpdateBoardDto): Promise<Board> {
-    const board = await this.boardRepository.findOneBy({ id });
-    if (!board) {
-      throw new NotFoundException('보드를 찾을 수 없습니다.');
-    }
-    await this.boardRepository.update(id, updateBoardData);
-    return await this.boardRepository.save(board);
+    await this.boardRepository.update(id, { ...updateBoardData });
+    return await this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {
-    const board = await this.boardRepository.findOneBy({ id });
-    if (!board) {
-      throw new NotFoundException('보드를 찾을 수 없습니다.');
-    }
+    const board = await this.findOne(id);
     await this.boardRepository.delete(id);
   }
 }
