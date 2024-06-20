@@ -22,6 +22,9 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments)
   author: User;
 
+  @ManyToOne(() => Post, (post) => post.comments, { onDelete: 'CASCADE' })
+  post: Post;
+
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
@@ -31,7 +34,4 @@ export class Comment {
   @Exclude()
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   deletedAt?: Date | null;
-
-  @ManyToOne(() => Post, (post) => post.comments, { onDelete: 'CASCADE' })
-  post: Post;
 }

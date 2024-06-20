@@ -18,6 +18,7 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { Post } from 'src/board/entities/post.entity';
 import { Comment } from '@board/entities/comment.entity';
+import { File } from '@file/entities/file.entity';
 
 const bcryptRegex = /^\$(?:2a|2x|2y|2b)\$\d+\$/u;
 
@@ -86,6 +87,9 @@ export class User {
     onDelete: 'CASCADE',
   })
   comments: Comment[];
+
+  @OneToMany(() => File, (file) => file.user, { onDelete: 'CASCADE' })
+  files: File[];
 
   #salt: string | undefined;
 

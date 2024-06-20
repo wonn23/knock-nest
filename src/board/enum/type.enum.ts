@@ -1,4 +1,5 @@
 enum MeetingPurpose {
+  ALL = '전체',
   FOOD = '음식',
   DRINKS = '술',
   MOVIE = '영화',

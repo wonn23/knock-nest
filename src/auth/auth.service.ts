@@ -6,7 +6,6 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '@src/redis/redis.service';
 import { RegisterDto } from '@auth/dto/register.dto';
-import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {

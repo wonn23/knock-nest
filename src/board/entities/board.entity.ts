@@ -19,6 +19,14 @@ export class Board {
   @Column({ unique: true })
   name: string;
 
+  @ManyToMany(() => Post)
+  @JoinTable({
+    name: 'board_post',
+    joinColumn: { name: 'board_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'post_id', referencedColumnName: 'id' },
+  })
+  posts: Post[];
+
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
@@ -28,12 +36,4 @@ export class Board {
   @Exclude()
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   deletedAt?: Date | null;
-
-  @ManyToMany(() => Post)
-  @JoinTable({
-    name: 'board_posts',
-    joinColumn: { name: 'board_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'post_id', referencedColumnName: 'id' },
-  })
-  posts: Post[];
 }

@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { Comment } from '@board/entities/comment.entity';
 import { Exclude } from 'class-transformer';
+import { File } from '@file/entities/file.entity';
 
 @Entity('posts')
 export class Post {
@@ -48,6 +49,15 @@ export class Post {
   @Column({ type: 'int' })
   recruitedWoman: number;
 
+  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' })
+  user: User;
+
+  @OneToMany(() => Comment, (comment) => comment.post, { onDelete: 'CASCADE' })
+  comments: Comment[];
+
+  @OneToMany(() => File, (file) => file.post, { onDelete: 'CASCADE' })
+  files: File[];
+
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
@@ -57,10 +67,4 @@ export class Post {
   @Exclude()
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   deletedAt?: Date | null;
-
-  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' })
-  user: User;
-
-  @OneToMany(() => Comment, (comment) => comment.post, { onDelete: 'CASCADE' })
-  comments: Comment[];
 }

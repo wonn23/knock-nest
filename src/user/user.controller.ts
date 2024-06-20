@@ -3,17 +3,17 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@user/entities/user.entity';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<User> {
     return this.userService.findOne(id);
   }
 
@@ -21,7 +21,7 @@ export class UserController {
   async update(
     @Param('id') userId: string,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
+  ): Promise<User> {
     return this.userService.update(userId, updateUserDto);
   }
 

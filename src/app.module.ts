@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import { LoggerMiddleware } from '@common/middlewares/logger.middleware';
 import { RedisModule } from './redis/redis.module';
+import { FileModule } from './file/file.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -55,6 +56,7 @@ import { RedisModule } from './redis/redis.module';
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
         namingStrategy: new SnakeNamingStrategy(),
+        // dropSchema: true,
       }),
       inject: [ConfigService],
     }),
@@ -65,6 +67,7 @@ import { RedisModule } from './redis/redis.module';
       inject: [ConfigService],
     }),
     RedisModule,
+    FileModule,
   ],
   controllers: [],
   providers: [],

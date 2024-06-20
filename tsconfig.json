@@ -24,6 +24,7 @@
       "@board/*": ["src/board/*"],
       "@chat/*": ["src/chat/*"],
       "@common/*": ["src/common/*"],
+      "@file/*": ["src/file/*"],
       "@config/*": ["src/config/*"],
       "@user/*": ["src/user/*"],
       "@utils/*": ["src/utils/*"]

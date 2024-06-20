@@ -70,7 +70,7 @@ export class UserService {
     return newUser;
   }
 
-  async update(id: User['id'], updateUserDto: UpdateUserDto) {
+  async update(id: User['id'], updateUserDto: UpdateUserDto): Promise<User> {
     await this.findOne(id); // 업데이트 전 유저가 존재하는지 확인
     await this.userRepository.update(id, updateUserDto);
     return this.findOne(id); // 업데이트 후 유저 정보 반환
